@@ -12,18 +12,34 @@ import {
   FaTimes,
   FaLayerGroup
 } from "react-icons/fa";
+import { usePathname } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  useEffect(() => {
+  const { data: session } = authClient.useSession();
+  const userRole = session?.user?.role || "reader";
+
+  const pathname= usePathname();
+  
+    useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [pathname]);
+
+  // Don't render navbar on dashboard
+  if (pathname?.startsWith('/dashboard')) {
+    return null;
+  }
+
+
+  
 
   const menuItems = [
     {
@@ -38,7 +54,7 @@ export default function Navbar() {
     },
     {
       name: "Dashboard",
-      path: "/dashboard",
+      path: '/dashboard',
       icon: FaLayerGroup,
     },
   ];

@@ -43,11 +43,11 @@ const LoginComponent = () => {
     });
 
     if (data) {
-      toast.success("Welcome Back!");
+      toast.success("Welcome Back!", { theme: "dark" });
       router.push("/");
     }
     if (error) {
-      toast.error("Login Failed! Please check your credentials.");
+      toast.error("Login Failed! Please check your credentials.", { theme: "dark" });
     }
     setIsLoading(false);
   };

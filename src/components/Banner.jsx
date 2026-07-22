@@ -23,11 +23,11 @@ export default function HeroBanner() {
   const slides = [
     {
       id: 1,
-      title: "📚 Discover Your Next Great Read",
+      title: "Discover Your Next Great Read",
       subtitle: "For Readers - Browse thousands of ebooks",
       description: "Explore our vast collection of digital books across all genres. Find your next favorite read today!",
       image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800&h=400&fit=crop",
-      cta: "Start Reading",
+      cta: "Browse Ebooks",
       link: "/all-ebooks",
       gradient: "from-yellow-400/20 via-orange-400/10 to-red-600/20",
       role: "reader",
@@ -39,11 +39,11 @@ export default function HeroBanner() {
     },
     {
       id: 2,
-      title: "✍️ Share Your Stories",
+      title: "Share Your Stories",
       subtitle: "For Writers - Publish your work",
       description: "Join our community of authors. Publish your books, reach millions of readers, and build your audience.",
       image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&h=400&fit=crop",
-      cta: "Start Writing",
+      cta: "Publish Your Book",
       link: "/dashboard",
       gradient: "from-blue-400/20 via-purple-400/10 to-pink-600/20",
       role: "writer",
@@ -55,7 +55,7 @@ export default function HeroBanner() {
     },
     {
   id: 3,
-  title: "📈 Track Your Reading Journey",
+  title: "Track Your Reading Journey",
   subtitle: "For Readers - Personalized dashboard",
   description: "Track your reading progress, set goals, and discover personalized book recommendations based on your interests.",
   image: "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=800&h=400&fit=crop",

@@ -15,7 +15,14 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
-import { FaBookOpen, FaEye, FaEyeSlash, FaUser, FaPenFancy, FaUserCog } from "react-icons/fa";
+import {
+  FaBookOpen,
+  FaEye,
+  FaEyeSlash,
+  FaUser,
+  FaPenFancy,
+  FaUserCog,
+} from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -38,39 +45,45 @@ const SignUpComponent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       const formData = new FormData(e.currentTarget);
       const userData = Object.fromEntries(formData.entries());
 
-      console.log("User data:", userData);
+    //   console.log("User data:", userData);
 
       let imageUrl = "";
-      if (userData.image && userData.image.size > 0) {
+      if (userData?.image && userData.image.size > 0) {
         const uploaded = await imageUpload(userData.image);
         imageUrl = uploaded.url;
-        console.log("Image URL:", imageUrl);
+        // console.log("Image URL:", imageUrl);
       }
 
-      const { data, error } = await authClient.signUp.email({
-        name: userData.name,
-        email: userData.email,
-        password: userData.password,
-        image: imageUrl,
-        role: userData.role, // Add role to the signup data
-      });
+      if (userData.password1 === userData.password2) {
+        const { data, error } = await authClient.signUp.email({
+          name: userData.name,
+          email: userData.email,
+          password: userData.password1,
+          image: imageUrl,
+          role: userData.role, // Add role to the signup data
+        });
+        if (data) {
+          await authClient.signOut();
+          toast.success("Account Created Successfully!", { theme: "dark" });
+          router.push("/login");
+        }
 
-      if (data) {
-        await authClient.signOut();
-        toast.success("Account Created Successfully! 🎉", { theme: "dark" });
-        router.push("/login");
+        if (error) {
+          toast.error(
+            error.message || "Registration Failed! Please try again.", { theme: "dark" }
+          );
+        }
       }
-      
-      if (error) {
-        toast.error(error.message || "Registration Failed! Please try again.", { theme: "dark" });
+      else{
+        toast.error("Password did not match, try Again" , { theme: "dark" });
+        return;
       }
     } catch (error) {
-      console.error("Error:", error);
       toast.error("Something went wrong. Please try again.", { theme: "dark" });
     } finally {
       setIsLoading(false);
@@ -78,13 +91,13 @@ const SignUpComponent = () => {
   };
 
   const roles = [
-    { key: "reader", label: "Reader", icon: FaUser},
-    { key: "writer", label: "Writer", icon: FaPenFancy},
-    { key: "admin", label: "Admin", icon: FaUserCog},
+    { key: "reader", label: "Reader", icon: FaUser },
+    { key: "writer", label: "Writer", icon: FaPenFancy },
+    { key: "admin", label: "Admin", icon: FaUserCog },
   ];
 
   const getRoleIcon = (roleKey) => {
-    const role = roles.find(r => r.key === roleKey);
+    const role = roles.find((r) => r.key === roleKey);
     return role ? role.icon : FaUser;
   };
 
@@ -107,7 +120,7 @@ const SignUpComponent = () => {
           onSubmit={handleSubmit}
         >
           <div className="absolute top-0 left-0 right-0 h-1.5 bg-linear-to-r from-yellow-400 via-orange-400 to-red-600 rounded-t-2xl" />
-          
+
           <div className="flex flex-col items-center gap-3 pt-8 pb-2">
             <div className="p-3 rounded-2xl bg-linear-to-br from-yellow-400/20 to-red-600/20 border border-white/10">
               <FaBookOpen className="w-8 h-8 text-yellow-400" />
@@ -136,15 +149,21 @@ const SignUpComponent = () => {
                         : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10"
                     }`}
                   >
-                    <Icon 
+                    <Icon
                       className={`mx-auto mb-1 ${
-                        selectedRole === role.key ? "text-yellow-400" : "text-white/40"
-                      }`} 
-                      size={20} 
+                        selectedRole === role.key
+                          ? "text-yellow-400"
+                          : "text-white/40"
+                      }`}
+                      size={20}
                     />
-                    <p className={`text-xs font-medium ${
-                      selectedRole === role.key ? "text-yellow-400" : "text-white/60"
-                    }`}>
+                    <p
+                      className={`text-xs font-medium ${
+                        selectedRole === role.key
+                          ? "text-yellow-400"
+                          : "text-white/60"
+                      }`}
+                    >
                       {role.label}
                     </p>
                   </button>
@@ -168,13 +187,13 @@ const SignUpComponent = () => {
 
           <TextField name="image" type="file">
             <Label className="text-white/80 text-sm font-medium">
-              Profile Image
+              Profile Image (Optional)
             </Label>
             <div className="relative">
-              <input 
-                type="file" 
+              <input
+                type="file"
                 name="image"
-                className="border border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-yellow-400/50 transition-all w-full rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-yellow-400 file:to-red-600 file:text-black hover:file:scale-105 file:transition-all file:cursor-pointer cursor-pointer" 
+                className="border border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-yellow-400/50 transition-all w-full rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-yellow-400 file:to-red-600 file:text-black hover:file:scale-105 file:transition-all file:cursor-pointer cursor-pointer"
                 accept="image/*"
               />
             </div>
@@ -203,7 +222,7 @@ const SignUpComponent = () => {
 
           <TextField
             isRequired
-            name="password"
+            name="password1"
             type={isVisible ? "text" : "password"}
             validate={(value) => {
               if (value.length < 6) {
@@ -239,6 +258,44 @@ const SignUpComponent = () => {
             </Description>
             <FieldError className="text-red-400 text-xs" />
           </TextField>
+          <TextField
+            isRequired
+            name="password2"
+            type={isVisible ? "text" : "password"}
+            validate={(value) => {
+              if (value.length < 6) {
+                return "Password must be at least 6 characters";
+              }
+              if (!/[A-Z]/.test(value)) {
+                return "Password must contain at least one uppercase letter";
+              }
+              if (!/[a-z]/.test(value)) {
+                return "Password must contain at least one lowercase letter";
+              }
+              return null;
+            }}
+          >
+            <Label className="text-white/80 text-sm font-medium">
+              Confirm Password
+            </Label>
+            <div className="relative">
+              <Input
+                className="border border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-yellow-400/50 transition-all pr-10 w-full"
+                placeholder="Rewrite your password"
+              />
+              <button
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors focus:outline-none z-10"
+                type="button"
+                onClick={toggleVisibility}
+              >
+                {isVisible ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+              </button>
+            </div>
+            <Description className="text-white/30 text-xs">
+              Must be at least 6 characters with 1 uppercase and 1 lowercase
+            </Description>
+            <FieldError className="text-red-400 text-xs" />
+          </TextField>
 
           <Button
             type="submit"
@@ -247,7 +304,7 @@ const SignUpComponent = () => {
           >
             {isLoading ? "Creating Account..." : "Create Account"}
           </Button>
-          
+
           <div className="flex items-center gap-3 my-2">
             <Separator
               className="flex-1 bg-white/10"

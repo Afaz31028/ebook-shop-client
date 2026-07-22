@@ -1,6 +1,7 @@
 "use client"
 import { Link } from "@heroui/react";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { 
   FaHeart, 
   FaTwitter, 
@@ -15,6 +16,7 @@ import {
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const pathname=usePathname();
 
   const quickLinks = [
     { name: "About Us", href: "/about" },
@@ -47,6 +49,11 @@ export default function Footer() {
     hidden: { opacity: 0, y: 10 },
     visible: { opacity: 1, y: 0 }
   };
+
+  if (pathname?.includes('/dashboard')) {
+    return null;
+  }
+
 
   return (
     <motion.footer
