@@ -1,5 +1,6 @@
 import { Button, Card } from "@heroui/react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const DisplayAllBooks = ({ bookItem }) => {
@@ -7,9 +8,9 @@ const DisplayAllBooks = ({ bookItem }) => {
 
     return (
         <div className="group">
-            <Card
-                className="overflow-hidden w-90 rounded-3xl bg-[#181820] border border-gray-800 shadow-lg"
-            >
+        <Link href={`/all-ebooks/${bookItem._id}`}>
+             <Card
+                className="overflow-hidden w-90 rounded-3xl bg-[#181820] border border-gray-800 shadow-lg">
                 {/* Book Cover */}
                 <div className="relative p-4">
                     <div className="absolute inset-0
@@ -48,6 +49,7 @@ const DisplayAllBooks = ({ bookItem }) => {
                     </Button>
                 </div>
             </Card>
+        </Link>
         </div>
     );
 };
