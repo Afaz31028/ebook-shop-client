@@ -1,4 +1,5 @@
 "use client";
+import { authClient } from "@/lib/auth-client";
 import { imageUpload } from "@/lib/imgbb";
 import {
   Button,
@@ -9,36 +10,72 @@ import {
   Separator,
 } from "@heroui/react";
 import React, { useState } from "react";
-import { FaBookOpen} from "react-icons/fa";
-
+import { FaBookOpen } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const AddBook = () => {
-const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async(e) => {
+  const { data: session } = authClient.useSession();
+  const userRole = session?.user;
+  // console.log(userRole)
+
+  const formattedDate = new Date().toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    try{
-        const formData = new FormData(e.currentTarget);
-        const bookData = Object.fromEntries(formData.entries());
+    try {
+      const formData = new FormData(e.currentTarget);
+      const bookData = Object.fromEntries(formData.entries());
 
-        const bookImg= await imageUpload(bookData.image);
-
-        // console.log(bookData);
-        const data=
-        {
-            title:bookData.title,
-            description:bookData.description,
-            genre:bookData.genre,
-            price: Number(bookData.price),
-            image:bookImg.url
-        }
-        // console.log(data)
-    }catch(error){
-        toast.error("Action failed. Please try again.", { theme: "dark" });
-    }finally{
+      let imageUrl = "";
+      if (bookData.image && bookData.image.size > 0) {
+        const uploadedImage = await imageUpload(bookData.image);
+        imageUrl = uploadedImage.url;
+      } else {
+        toast.error("Please upload a book cover image.", { theme: "dark" });
         setIsLoading(false);
+        return;
+      }
+
+      // console.log(bookData);
+      const data = {
+        title: bookData.title,
+        description: bookData.description,
+        genre: bookData.genre,
+        price: Number(bookData.price),
+        image: imageUrl,
+        writerId: userRole?.id,
+        writerName: userRole?.name,
+        writerEmail: userRole?.email,
+        uploadedDate: formattedDate,
+      };
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/add-book`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        },
+      );
+      const result = await res.json();
+      if (res.ok) {
+        toast.success("Added the book Successfully!", { theme: "dark" });
+      }
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+      toast.error("Action failed. Please try again.", { theme: "dark" });
+    } finally {
+      setIsLoading(false);
     }
   };
 

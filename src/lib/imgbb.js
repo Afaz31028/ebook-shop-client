@@ -8,6 +8,6 @@ export const imageUpload= async(image)=>{
     }) 
 
     const data= await res.json();
-    console.log(data.data)
+    // console.log(data.data)
     return data.data;
 }
