@@ -106,7 +106,7 @@ const EditBook = ({ book }) => {
   return (
     <div className="w-full py-10 text-white">
       <Form
-        className="relative flex flex-col gap-4 rounded-2xl border border-white/10 bg-[#14141a] px-8 pb-8 shadow-2xl shadow-black/50 backdrop-blur-xl"
+        className="relative flex flex-col gap-4 rounded-2xl border border-white/10 bg-[#14141a] px-5 pb-5 shadow-2xl shadow-black/50 backdrop-blur-xl"
         onSubmit={handleSubmit}
       >
         <TextField
@@ -256,7 +256,7 @@ const EditBook = ({ book }) => {
           isLoading={isLoading}
           className="mt-5 w-full rounded-xl bg-linear-to-r from-yellow-400 to-red-600 py-6 font-semibold text-black shadow-lg shadow-yellow-400/20 transition-all duration-300 hover:scale-[1.02]"
         >
-          {isLoading ? "Updating..." : "Update Book"}
+          {isLoading ? "Updating..." : "Update The Book"}
         </Button>
       </Form>
     </div>
