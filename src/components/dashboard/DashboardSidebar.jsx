@@ -22,7 +22,7 @@ export default function Sidebar() {
 
   const menuItems = {
     writer: [
-      { name: "Dashboard", path: "/dashboard", icon: FaHome },
+      { name: "Dashboard", path: "/dashboard/writer", icon: FaHome },
       { name: "Add Book", path: "/dashboard/writer/add-book", icon: FaBook },
       {
         name: "Analytics",

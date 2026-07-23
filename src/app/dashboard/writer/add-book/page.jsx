@@ -7,14 +7,17 @@ import {
   Input,
   Label,
   TextField,
-  Separator,
+  Select,
+  ListBox,
 } from "@heroui/react";
+import { CheckCircle, EyeOff } from "lucide-react";
 import React, { useState } from "react";
 import { FaBookOpen } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 const AddBook = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState("Unpublished");
 
   const { data: session } = authClient.useSession();
   const userRole = session?.user;
@@ -55,6 +58,7 @@ const AddBook = () => {
         writerName: userRole?.name,
         writerEmail: userRole?.email,
         uploadedDate: formattedDate,
+        status: status || "Unpublished",
       };
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/add-book`,
@@ -129,6 +133,57 @@ const AddBook = () => {
             />
           </div>
         </TextField>
+
+        {/* Using HeroUI Select */}
+        <Select
+          className="w-full"
+          name="status"
+          value={status}
+          onChange={(selectedValue) => {
+            setStatus(selectedValue ? String(selectedValue) : "Unpublished");
+          }}
+          placeholder="Select Status"
+          isRequired
+        >
+          <Label className="text-white/80 text-sm font-medium">
+            Book Status
+          </Label>
+
+          <Select.Trigger className="w-full bg-white/5 border border-white/10 text-white focus:border-yellow-400/50 transition-all">
+            <Select.Value className="text-white" />
+            <Select.Indicator />
+          </Select.Trigger>
+
+          <Select.Popover className="bg-gray-800 border border-white/10 rounded-lg">
+            <ListBox className="text-white">
+              <ListBox.Item
+                id="Published"
+                textValue="Published"
+                className="text-green-400 hover:bg-white/5 data-[focused]:bg-white/10"
+              >
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-400" />
+                  <span>Published</span>
+                </div>
+
+                <ListBox.ItemIndicator />
+              </ListBox.Item>
+
+              <ListBox.Item
+                id="Unpublished"
+                textValue="Unpublished"
+                className="text-yellow-400 hover:bg-white/5 data-[focused]:bg-white/10"
+              >
+                <div className="flex items-center gap-2">
+                  <EyeOff className="w-4 h-4 text-yellow-400" />
+                  <span>Unpublished</span>
+                </div>
+
+                <ListBox.ItemIndicator />
+              </ListBox.Item>
+            </ListBox>
+          </Select.Popover>
+        </Select>
         <TextField isRequired name="image" type="file">
           <Label className="text-white/80 text-sm font-medium">
             Book&apos;s Cover Photo

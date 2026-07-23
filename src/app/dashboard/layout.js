@@ -7,7 +7,7 @@ const DashboardLayout = ({children}) => {
                 <div>
                     <DashboardSidebar></DashboardSidebar>
                 </div>
-                <div className='flex-1 ml-120'>
+                <div className='flex-1 ml-100'>
                     <main >{children}</main>
                 </div>
         </div>
