@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 
 const DisplayAllBooks = ({ bookItem }) => {
-    const { title, price, image, writerName, genre } = bookItem;
+    const {_id, title, price, image, writerId, writerName, genre } = bookItem;
 
     return (
         <div className="group">
@@ -42,11 +42,17 @@ const DisplayAllBooks = ({ bookItem }) => {
                             border-orange-500/30">
                         {genre}</span>
                     )}
-                    <Button className="mt-5 h-12 w-full rounded-xl bg-linear-to-r from-yellow-400 via-orange-500 to-red-500
-                        text-black font-semibold hover:scale-105 transition duration-300 shadow-lg shadow-orange-500/20"
-                    >
-                        Buy Now
-                    </Button>
+                    <form action={"/api/payment"} method="POST">
+                        <input type="hidden" value={price} name="price" />
+                        <input type="hidden" value={title} name="title" />
+                        <input type="hidden" value={_id} name="bookId" />
+                        <input type="hidden" value={writerId} name="writerId" />
+                        <Button type="submit" className="mt-5 h-12 w-full rounded-xl bg-linear-to-r from-yellow-400 via-orange-500 to-red-500
+                            text-black font-semibold hover:scale-105 transition duration-300 shadow-lg shadow-orange-500/20"
+                        >
+                            Buy Now
+                        </Button>
+                    </form>
                 </div>
             </Card>
         </Link>

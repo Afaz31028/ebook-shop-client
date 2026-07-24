@@ -7,15 +7,10 @@ import { authClient } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
 
 const BookDetailsPage = ({ bookData }) => {
-    const { title, image, writerName, description, price, genre, status, uploadedDate, writerId } = bookData;
+    const {_id, title, image, writerName, description, price, genre, status, uploadedDate, writerId } = bookData;
 
     const { data: session } = authClient.useSession();
     const curUser = session?.user?.role;
-
-    const handlePurchase = () => {
-        // Stripe Checkout API call here
-        console.log("Redirecting Stripe Checkout");
-    };
 
     return (
         <div className="min-h-screen bg-[#121218] px-5 py-12">
@@ -64,11 +59,17 @@ const BookDetailsPage = ({ bookData }) => {
                             isDisabled={true}
                             className={`mt-8 h-14 rounded-xl text-lg font-bold transition bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-black hover:scale-105}`}>
                             Purchase Book
-                        </Button>) : (<Button 
-                            onClick={handlePurchase}
-                            className={`mt-8 h-14 rounded-xl text-lg font-bold transition bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-black hover:scale-105}`}>
-                            Purchase Book
-                        </Button>)
+                        </Button>) : 
+                        (<form action={"/api/payment"} method="POST">
+                            <input type="hidden" value={price} name="price" />
+                            <input type="hidden" value={title} name="title" />
+                            <input type="hidden" value={_id} name="bookId" />
+                            <input type="hidden" value={writerId} name="writerId" />
+                            <Button type="submit"
+                                className={`mt-8 h-14 rounded-xl text-lg font-bold transition bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-black hover:scale-105}`}>
+                                    Purchase Book
+                            </Button>
+                        </form>)
                         }
                     </div>
                 </div>
